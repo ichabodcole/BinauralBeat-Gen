@@ -19,28 +19,89 @@ describe('BinauralBeat', function () {
 
     describe('constructor', function () {
         it ('should return an instance of BinauralBeat', function () {
-            expect(bBeat instanceof BinauralBeatGen).toBe(true);
+            expect(bBeat instanceof BinauralBeatGen).toEqual(true);
         });
     });
 
     describe('properties', function () {
-        it ('should have an input property which is an AudioNode', function () {
-            expect(allen.isAudioNode(bBeat.input)).toEqual(true);
-        }),
-        it ('should have an output property which is an AudioNode', function () {
-            expect(allen.isAudioNode(bBeat.output)).toEqual(true);
-        }),
-        it ('should have a pitch property with default set to 440', function () {
-            expect(bBeat.pitch).toEqual(440);
-        }),
-        it ('should have a beatRate property with default set to 5', function () {
-            expect(bBeat.beatRate).toEqual(5);
-        }),
-        it ('should have a waveType property with default set to "sine"', function () {
-            expect(bBeat.waveType).toEqual('sine');
-        }),
-        it ('should have a compressNodes property with default set to false', function () {
-            expect(bBeat.compressNodes).toEqual(false);
+        describe('input', function() {
+            it ('should be an AudioNode', function () {
+                expect(allen.isAudioNode(bBeat.input)).toEqual(true);
+            });
+        });
+
+        describe('output', function() {
+            it ('should be an AudioNode', function () {
+                expect(allen.isAudioNode(bBeat.output)).toEqual(true);
+            });
+        });
+
+        describe('model', function () {
+            it('should return an object representing the current instances values', function() {
+                var model = {
+                    pitch: 580,
+                    beatRate: 13,
+                    waveType: WaveTypes.TRIANGLE
+                };
+
+                bBeat = new BinauralBeatGen(ctx);
+                bBeat.beatRate = model.beatRate;
+                bBeat.pitch = model.pitch;
+                bBeat.waveType = model.waveType;
+
+                expect(bBeat.model).toEqual(model);
+            });
+        })
+
+        describe('pitch', function() {
+            it ('should default set to 440', function () {
+                expect(bBeat.pitch).toEqual(440);
+            });
+
+            it('should return the models pitch value', function() {
+                expect(bBeat.pitch).toEqual(bBeat.model.pitch);
+            });
+
+            it('should set the pitch value', function() {
+                bBeat.pitch = 225;
+                expect(bBeat.pitch).toEqual(225);
+            });
+        });
+
+        describe('beatRate', function() {
+            it ('should default to 5', function () {
+                expect(bBeat.beatRate).toEqual(5);
+            });
+
+            it ('should return the models beatRate value', function() {
+                expect(bBeat.beatRate).toEqual(bBeat.model.beatRate);
+            });
+
+            it ('should set the beatRate value', function() {
+                bBeat.beatRate = 12;
+                expect(bBeat.beatRate).toEqual(12);
+            });
+        });
+
+        describe('waveType', function() {
+            it ('should default to "sine"', function () {
+                expect(bBeat.waveType).toEqual(WaveTypes.SINE);
+            });
+
+            it ('should return the models waveType value', function() {
+                expect(bBeat.waveType).toEqual(bBeat.model.waveType);
+            });
+
+            it ('should set the waveType value', function() {
+                bBeat.waveType = WaveTypes.TRIANGLE
+                expect(bBeat.waveType).toEqual(WaveTypes.TRIANGLE);
+            });
+        });
+
+        describe('compressNodes', function() {
+            it ('should default to false', function () {
+                expect(bBeat.compressNodes).toEqual(false);
+            });
         });
     });
 
@@ -56,43 +117,11 @@ describe('BinauralBeat', function () {
             });
         });
 
-        describe('setPitch', function () {
-            it ('should have a method setPitch', function () {
-                expect(bBeat.setPitch).toBeDefined();
-            });
-
-            it ('should change the pitch value', function (){
-                bBeat.setPitch(500);
-                expect(bBeat.pitch).toEqual(500);
-            });
-        }),
-
-        describe('setBeatRate', function () {
-            it ('should have a method setBeatRate', function () {
-                expect(bBeat.setBeatRate).toBeDefined();;
-            });
-
-            it ('should change the pitch value', function (){
-                bBeat.setBeatRate(16);
-                expect(bBeat.beatRate).toEqual(16);
-            });
-        }),
-
-        describe('setWaveType', function () {
-            it ('should have a method setWaveType', function () {
-                expect(bBeat.setWaveType).toBeDefined();
-            });
-
-            it ('should change the waveType value', function (){
-                bBeat.setWaveType(WaveTypes.SQUARE);
-                expect(bBeat.waveType).toEqual(WaveTypes.SQUARE);
-            });
-        });
-
         describe('setPeriodicWave', function () {
             it ('should have a method setPeriodicWave', function () {
                 expect(bBeat.setPeriodicWave).toBeDefined();
-            }),
+            });
+
             it ('should take a PeriodicWave argument', function () {
                 var real = new Float32Array(4096);
                 var imag = new Float32Array(4096);
@@ -125,13 +154,20 @@ describe('BinauralBeat', function () {
                 function connect () {
                     bBeat.connect(gainNode);
                 }
-            }),
+            });
+
             it ('should take a web audio component instance', function () {
                 expect(connect).not.toThrow();
 
                 function connect () {
                     bBeat.connect(new BinauralBeatGen(ctx));
                 }
+            });
+
+            it('should call the outputs connect method', function( ){
+                spyOn(bBeat.output, 'connect');
+                bBeat.connect(gainNode);
+                expect(bBeat.output.connect).toHaveBeenCalled();
             });
         }),
 
@@ -144,6 +180,13 @@ describe('BinauralBeat', function () {
                 function disconnect (){
                     bBeat.disconnect();
                 }
+            });
+
+            it('should call the outputs disconnect method', function( ){
+                spyOn(bBeat.output, 'disconnect');
+                bBeat.connect(gainNode);
+                bBeat.disconnect();
+                expect(bBeat.output.disconnect).toHaveBeenCalled();
             });
         });
     });
