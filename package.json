@@ -1,9 +1,8 @@
 {
-  "name": "BinauralBeatGen-ES6",
+  "name": "binauralbeatgen",
   "version": "0.0.2",
   "author": "Cole Reed",
   "description": "Library for creating binaural beats via the web audio api",
-  "filename": "BinauralBeatGen",
   "main": "lib/BinauralBeatGen.js",
   "browserify": {
     "transform": [
