@@ -1,4 +1,4 @@
-import { WaveTypes, BinauralBeatGen } from '../lib/BinauralBeatGen';
+import { WaveTypes, BinauralBeatGen } from '../index';
 
 describe('BinauralBeat', function () {
     var ctx, bBeat, mediaElement, gainNode;
