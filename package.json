@@ -52,10 +52,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ichabodcole/BinauralBeatGen.git"
+    "url": "git+https://github.com/ichabodcole/BinauralBeat-Gen.git"
   },
   "bugs": {
-    "url": "https://github.com/ichabodcole/BinauralBeatGen/issues"
+    "url": "https://github.com/ichabodcole/BinauralBeat-Gen/issues"
   },
-  "homepage": "https://github.com/ichabodcole/BinauralBeatGen#readme"
+  "homepage": "https://github.com/ichabodcole/BinauralBeat-Gen#readme"
 }
