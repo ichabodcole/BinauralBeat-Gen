@@ -4,16 +4,51 @@ var env = process.env.NODE_ENV || 'development';
 var path = require('path');
 
 var gulp        = require('gulp'),
+    del         = require('del'),
     browserify  = require('browserify'),
     babelify    = require('babelify'),
+    source      = require('vinyl-source-stream'),
+    buffer      = require('vinyl-buffer'),
     jsStylish   = require('jshint-stylish'),
     karma       = require('karma').server;
 
 var $ = require('gulp-load-plugins')();
 
+var config = {
+    dist: './dist',
+    fileOutput: 'binauralbeat-gen.js'
+};
+
+gulp.task('build', ['clean', 'jshint', 'test'], build);
 gulp.task('tdd', ['jshint'], tdd);
 gulp.task('test', ['jshint'], test);
 gulp.task('jshint', jshint);
+gulp.task('clean', clean);
+
+/* Build / Bundle tasks */
+function build () {
+    var b = browserify({
+        entries: './index.js',
+        debug: false
+    });
+
+    b.add('babelify/polyfill');
+
+    return b.bundle()
+        .pipe(source(config.fileOutput))
+        .pipe(gulp.dest(config.dist))
+        .pipe(buffer())
+        .pipe($.sourcemaps.init({ loadMaps: true }))
+        .pipe($.uglify())
+        .pipe($.rename({ extname: '.min.js' }))
+        .on('error', $.util.log)
+        .pipe($.sourcemaps.write('./'))
+        .pipe(gulp.dest(config.dist));
+}
+
+function clean(done) {
+    return del([config.dist]);
+}
 
 /* Test tasks */
 function tdd (done) {
