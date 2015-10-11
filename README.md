@@ -1,7 +1,7 @@
-BinauralBeatGenJS-ES6
+BinauralBeatGen
 ==========
 
-Library for creating binaural beats via the web audio api. Written in ES6.
+Library for generatring binaural beats via the web audio api.
 
 ### Installation
-npm install ichabodcole/BinauralBeatGenJS-ES6
+npm install ichabodcole/BinauralBeatGen
